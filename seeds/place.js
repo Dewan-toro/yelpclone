@@ -7,8 +7,10 @@ mongoose
     console.log("connected to mongodb");
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err)
   });
+
+  
 
 async function seedPlaces() {
   const places = [

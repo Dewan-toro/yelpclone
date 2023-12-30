@@ -28,6 +28,11 @@ app.get('/places', async(req, res) => {
   res.render('places/index', {places})
 })
 
+app.get('/places/:id', async(req, res) => {
+  const place = await Place.findById(req.params.id);
+  res.render('places/show', {place})
+})
+
 // app.get("/seed/place", async (req, res) => {
 //   const place = new Place({
 //     title: "Empire State Building",

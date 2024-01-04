@@ -1,3 +1,4 @@
+const ejsMate = require("ejs-mate");
 const express = require("express");
 const methodOverride = require("method-override");
 const path = require("path");
@@ -17,6 +18,7 @@ mongoose
     console.log(err);
   });
 
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -61,7 +63,7 @@ app.put("/places/:id", async (req, res) => {
 app.delete("/places/:id", async (req, res) => {
   await Place.findByIdAndDelete(req.params.id);
   res.redirect("/places");
-})
+});
 
 // app.get("/seed/place", async (req, res) => {
 //   const place = new Place({

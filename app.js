@@ -39,10 +39,14 @@ app.get("/places/create", (req, res) => {
   res.render("places/create");
 });
 
-app.post("/places", async (req, res) => {
-  const place = new Place(req.body.place);
-  await place.save();
-  res.redirect("/places");
+app.post("/places", async (req, res, next) => {
+  try {
+    const place = new Place(req.body.place);
+    await place.save();
+    res.redirect("/places");
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.get("/places/:id", async (req, res) => {
@@ -65,17 +69,9 @@ app.delete("/places/:id", async (req, res) => {
   res.redirect("/places");
 });
 
-// app.get("/seed/place", async (req, res) => {
-//   const place = new Place({
-//     title: "Empire State Building",
-//     price: "$58000",
-//     description: "A greate building",
-//     location: "Jakarta, INA",
-//   });
-
-//   await place.save();
-//   res.send(place);
-// });
+app.use(( err, req, res, next) => {
+res.status(500).send('something went wrong')
+})
 
 app.listen(3000, () => {
   console.log(`server is running on http://127.0.0.1:3000`);

@@ -40,7 +40,7 @@
   </div>
   <div class="col-6">
     <h3>Leave a review</h3>
-    <form action="/places/<%= place._id %>/reviews">
+    <form action="/places/<%= place._id %>/reviews" method="POST">
       <div class="mb-3">
         <label for="rating" class="form-label">Rating</label>
         <input

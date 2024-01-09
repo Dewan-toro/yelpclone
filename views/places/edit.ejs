@@ -1,7 +1,12 @@
 <% layout('layouts/app') %>
 <h1 class="text-center">Edit place</h1>
-<div class="col-6 offset-3">
-  <form action="/places/<%= place._id %>?_method=PUT" method="POST">
+<div class="col-6 offset-3 mb-5">
+  <form
+    action="/places/<%= place._id %>?_method=PUT"
+    method="POST"
+    class="validated-form"
+    novalidate
+  >
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
       <input
@@ -10,7 +15,10 @@
         id="title"
         class="form-control"
         value="<%= place.title %>"
+        required
       />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="location" class="form-label">Location</label>
@@ -20,7 +28,10 @@
         id="location"
         class="form-control"
         value="<%= place.location %>"
+        required
       />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="description" class="form-label">Description</label>
@@ -29,9 +40,12 @@
         name="place[description]"
         id="description"
         class="form-control"
+        required
       >
 <%= place.description %></textarea
       >
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="price" class="form-label">Price</label>
@@ -41,7 +55,10 @@
         id="price"
         class="form-control"
         value="<%= place.price %>"
+        required
       />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="image" class="form-label">Image Url</label>
@@ -51,8 +68,33 @@
         id="image"
         class="form-control"
         value="<%= place.image %>"
+        required
       />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <button type="submit" class="btn btn-success">Save</button>
   </form>
 </div>
+
+<script>
+  (() => {
+    "use strict";
+    const forms = document.querySelectorAll(".validated-form");
+
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>

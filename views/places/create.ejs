@@ -1,10 +1,18 @@
 <% layout('layouts/app') %>
 <h1 class="text-center">Add place</h1>
-<div class="col-6 offset-3">
-  <form action="/places" method="POST">
+<div class="col-6 offset-3 mb-5">
+  <form action="/places" method="POST" class="validated-form" novalidate>
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" name="place[title]" id="title" class="form-control" />
+      <input
+        type="text"
+        name="place[title]"
+        id="title"
+        class="form-control"
+        required
+      />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="location" class="form-label">Location</label>
@@ -13,7 +21,10 @@
         name="place[location]"
         id="location"
         class="form-control"
+        required
       />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="description" class="form-label">Description</label>
@@ -22,16 +33,57 @@
         name="place[description]"
         id="description"
         class="form-control"
+        required
       ></textarea>
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="price" class="form-label">Price</label>
-      <input type="text" name="place[price]" id="price" class="form-control" />
+      <input
+        type="text"
+        name="place[price]"
+        id="price"
+        class="form-control"
+        required
+      />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
       <label for="image" class="form-label">Image Url</label>
-      <input type="text" name="place[image]" id="image" class="form-control" />
+      <input
+        type="text"
+        name="place[image]"
+        id="image"
+        class="form-control"
+        required
+      />
+      <div class="valid-feedback">Looks good!</div>
+      <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <button type="submit" class="btn btn-success">Save</button>
   </form>
 </div>
+
+<script>
+  (() => {
+    "use strict";
+    const forms = document.querySelectorAll(".validated-form");
+
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>

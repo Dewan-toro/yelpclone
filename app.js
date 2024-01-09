@@ -1,6 +1,7 @@
 const ejsMate = require("ejs-mate");
 const express = require("express");
 const methodOverride = require("method-override");
+const wrapAsync = require("./utils/wrapAsync");
 const path = require("path");
 const mongoose = require("mongoose");
 const app = express();
@@ -30,48 +31,47 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/places", async (req, res) => {
-  const places = await Place.find();
-  res.render("places/index", { places });
-});
+app.get(
+  "/places",
+  wrapAsync(async (req, res) => {
+    const places = await Place.find();
+    res.render("places/index", { places });
+  })
+);
 
 app.get("/places/create", (req, res) => {
   res.render("places/create");
 });
 
-app.post("/places", async (req, res, next) => {
-  try {
+app.post("/places", wrapAsync(async (req, res, next) => {
     const place = new Place(req.body.place);
     await place.save();
     res.redirect("/places");
-  } catch (error) {
-    next(error);
-  }
-});
+}));
 
-app.get("/places/:id", async (req, res) => {
+app.get("/places/:id", wrapAsync(async (req, res) => {
   const place = await Place.findById(req.params.id);
   res.render("places/show", { place });
-});
+}));
 
-app.get("/places/:id/edit", async (req, res) => {
+app.get("/places/:id/edit", wrapAsync(async (req, res) => {
   const place = await Place.findById(req.params.id);
   res.render("places/edit", { place });
-});
+}));
 
-app.put("/places/:id", async (req, res) => {
+app.put("/places/:id", wrapAsync(async (req, res) => {
   await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
   res.redirect("/places");
-});
+}));
 
-app.delete("/places/:id", async (req, res) => {
+app.delete("/places/:id", wrapAsync(async (req, res) => {
   await Place.findByIdAndDelete(req.params.id);
   res.redirect("/places");
-});
+}));
 
-app.use(( err, req, res, next) => {
-res.status(500).send('something went wrong')
-})
+app.use((err, req, res, next) => {
+  res.status(500).send("something went wrong");
+});
 
 app.listen(3000, () => {
   console.log(`server is running on http://127.0.0.1:3000`);

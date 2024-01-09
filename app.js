@@ -13,6 +13,7 @@ const Review = require("./models/review");
 
 //schemas
 const { placeSchema } = require("./schemas/place");
+const { reviewSchema } = require("./schemas/review");
 
 //connect to mongoDB
 mongoose
@@ -35,7 +36,17 @@ app.use(methodOverride("_method"));
 const validatePlace = (req, res, next) => {
   const { error } = placeSchema.validate(req.body);
   if (error) {
-    const msg = error.details.map(el => el.message).join(",");
+    const msg = error.details.map((el) => el.message).join(",");
+    return next(new ErrorHandler(msg, 400));
+  } else {
+    next();
+  }
+};
+
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
     return next(new ErrorHandler(msg, 400));
   } else {
     next();
@@ -101,14 +112,18 @@ app.delete(
   })
 );
 
-app.post('/places/:id/reviews', wrapAsync(async (req, res, next) => {
-  const review = new Review(req.body.review);
-  const place = await Place.findById(req.params.id);
-  place.reviews.push(review);
-  await review.save();
-  await place.save();
-  res.redirect(`/places/${req.params.id}`);
-}))
+app.post(
+  "/places/:id/reviews",
+  validateReview,
+  wrapAsync(async (req, res, next) => {
+    const review = new Review(req.body.review);
+    const place = await Place.findById(req.params.id);
+    place.reviews.push(review);
+    await review.save();
+    await place.save();
+    res.redirect(`/places/${req.params.id}`);
+  })
+);
 
 app.all("*", (req, res, next) => {
   next(new ErrorHandler("Page not found", 404));

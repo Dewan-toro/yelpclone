@@ -1,5 +1,6 @@
 const ejsMate = require("ejs-mate");
 const express = require("express");
+const ErrorHandler = require("./utils/ErrorHandler");
 const methodOverride = require("method-override");
 const wrapAsync = require("./utils/wrapAsync");
 const path = require("path");
@@ -69,8 +70,14 @@ app.delete("/places/:id", wrapAsync(async (req, res) => {
   res.redirect("/places");
 }));
 
+app.all('*', (req, res, next) => {
+  next(new ErrorHandler("Page not found", 404));
+})
+
 app.use((err, req, res, next) => {
-  res.status(500).send("something went wrong");
+  const {statusCode = 500} = err;
+  if(!err.message) err.message = 'Oh no! Something went wrong'
+  res.status(statusCode).render('error',{err})
 });
 
 app.listen(3000, () => {

@@ -38,6 +38,7 @@ router.post(
   wrapAsync(async (req, res, next) => {
     const place = new Place(req.body.place);
     await place.save();
+    req.flash("success_msg", "Successfully made a new place!");
     res.redirect("/places");
   })
 );

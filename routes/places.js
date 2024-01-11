@@ -1,8 +1,12 @@
 const express = require("express");
-const Place = require("../models/place");
-const { placeSchema } = require("../schemas/place");
 const wrapAsync = require("../utils/wrapAsync");
 const ErrorHandler = require("../utils/ErrorHandler");
+//models
+const Place = require("../models/place");
+
+//schemas
+const { placeSchema } = require("../schemas/place");
+
 
 const router = express.Router();
 
@@ -17,19 +21,19 @@ const validatePlace = (req, res, next) => {
 };
 
 router.get(
-  "/places",
+  "/",
   wrapAsync(async (req, res) => {
     const places = await Place.find();
     res.render("places/index", { places });
   })
 );
 
-router.get("/places/create", (req, res) => {
+router.get("/create", (req, res) => {
   res.render("places/create");
 });
 
 router.post(
-  "/places",
+  "/",
   validatePlace,
   wrapAsync(async (req, res, next) => {
     const place = new Place(req.body.place);
@@ -39,7 +43,7 @@ router.post(
 );
 
 router.get(
-  "/places/:id",
+  "/:id",
   wrapAsync(async (req, res) => {
     const place = await Place.findById(req.params.id).populate("reviews");
     res.render("places/show", { place });
@@ -47,7 +51,7 @@ router.get(
 );
 
 router.get(
-  "/places/:id/edit",
+  "/:id/edit",
   wrapAsync(async (req, res) => {
     const place = await Place.findById(req.params.id);
     res.render("places/edit", { place });
@@ -55,7 +59,7 @@ router.get(
 );
 
 router.put(
-  "/places/:id",
+  "/:id",
   validatePlace,
   wrapAsync(async (req, res) => {
     await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
@@ -64,12 +68,11 @@ router.put(
 );
 
 router.delete(
-  "/places/:id",
+  "/:id",
   wrapAsync(async (req, res) => {
     await Place.findByIdAndDelete(req.params.id);
     res.redirect("/places");
   })
 );
-
 
 module.exports = router;

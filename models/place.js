@@ -12,13 +12,13 @@ const placeSchema = new Schema({
 });
 
 placeSchema.post("findOneAndDelete", async function (doc) {
-  if(doc) {
+  if (doc) {
     await Review.deleteMany({
       _id: {
-        $in: doc.reviews
-      }
-    })
+        $in: doc.reviews,
+      },
+    });
   }
-})
+});
 
 module.exports = mongoose.model("Place", placeSchema);

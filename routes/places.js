@@ -7,7 +7,6 @@ const Place = require("../models/place");
 //schemas
 const { placeSchema } = require("../schemas/place");
 
-
 const router = express.Router();
 
 const validatePlace = (req, res, next) => {
@@ -64,7 +63,9 @@ router.put(
   validatePlace,
   wrapAsync(async (req, res) => {
     await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
-    res.redirect("/places");
+    req.flash("success_msg", "Place updated successfully");
+
+    res.redirect(`/places/${req.params.id}`);
   })
 );
 
@@ -72,6 +73,7 @@ router.delete(
   "/:id",
   wrapAsync(async (req, res) => {
     await Place.findByIdAndDelete(req.params.id);
+    req.flash("success_msg", "Place deleted successfully");
     res.redirect("/places");
   })
 );

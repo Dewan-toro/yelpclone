@@ -8,6 +8,7 @@ const Review = require("../models/review");
 
 //schemas
 const { reviewSchema } = require("../schemas/review");
+const isValidObjectID = require("../middleware/isValidObjectID");
 
 const router = express.Router({ mergeParams: true });
 
@@ -23,6 +24,7 @@ const validateReview = (req, res, next) => {
 
 router.post(
   "/",
+  isValidObjectID("/places"),
   validateReview,
   wrapAsync(async (req, res, next) => {
     const review = new Review(req.body.review);
@@ -37,6 +39,7 @@ router.post(
 
 router.delete(
   "/:review_id",
+  isValidObjectID("/places"),
   wrapAsync(async (req, res) => {
     const { place_id, review_id } = req.params;
     await Place.findByIdAndUpdate(place_id, { $pull: { reviews: review_id } });

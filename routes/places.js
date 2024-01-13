@@ -6,6 +6,7 @@ const Place = require("../models/place");
 
 //schemas
 const { placeSchema } = require("../schemas/place");
+const isValidObjectID = require("../middleware/isValidObjectID");
 
 const router = express.Router();
 
@@ -44,6 +45,7 @@ router.post(
 
 router.get(
   "/:id",
+  isValidObjectID("/places"),
   wrapAsync(async (req, res) => {
     const place = await Place.findById(req.params.id).populate("reviews");
     res.render("places/show", { place });
@@ -52,6 +54,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  isValidObjectID("/places"),
   wrapAsync(async (req, res) => {
     const place = await Place.findById(req.params.id);
     res.render("places/edit", { place });
@@ -60,6 +63,7 @@ router.get(
 
 router.put(
   "/:id",
+  isValidObjectID("/places"),
   validatePlace,
   wrapAsync(async (req, res) => {
     await Place.findByIdAndUpdate(req.params.id, { ...req.body.place });
@@ -71,6 +75,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isValidObjectID("/places"),
   wrapAsync(async (req, res) => {
     await Place.findByIdAndDelete(req.params.id);
     req.flash("success_msg", "Place deleted successfully");

@@ -10,7 +10,16 @@ router.get("/register", (req, res) => {
 router.post(
   "/register",
   wrapAsync(async (req, res) => {
-    res.send(req.body);
+    try {
+      const { email, username, password } = req.body;
+      const user = new User({ email, username });
+      await User.register(user, password);
+      req.flash("success_msg", "Successfully registered!");
+      res.redirect("/places");
+    } catch (error) {
+      req.flash("error_msg", error.message);
+      res.redirect("/register");
+    }
   })
 );
 

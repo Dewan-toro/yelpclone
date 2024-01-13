@@ -8,7 +8,7 @@ const Review = require("../models/review");
 
 //schemas
 const { reviewSchema } = require("../schemas/review");
-const isValidObjectID = require("../middleware/isValidObjectID");
+const isValidObjectID = require("../middlewares/isValidObjectID");
 
 const router = express.Router({ mergeParams: true });
 

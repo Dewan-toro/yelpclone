@@ -6,7 +6,7 @@ const Place = require("../models/place");
 
 //schemas
 const { placeSchema } = require("../schemas/place");
-const isValidObjectID = require("../middleware/isValidObjectID");
+const isValidObjectID = require("../middlewares/isValidObjectID");
 
 const router = express.Router();
 

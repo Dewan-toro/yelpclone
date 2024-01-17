@@ -42,6 +42,7 @@
     </div>
   </div>
   <div class="col-6">
+    <% if(currentUser) {%>
     <h3>Leave a review</h3>
     <form
       action="/places/<%= place._id %>/reviews"
@@ -75,6 +76,7 @@
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <% } %>
     <% for(review of place.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">

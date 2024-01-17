@@ -23,6 +23,7 @@
           <p><b>Author</b> : <%= place.author.username %></p>
         </li>
       </ul>
+      <% if(currentUser && place.author.equals(currentUser._id)) { %>
       <div class="card-body">
         <a
           href="/places/<%= place._id %>/edit"
@@ -37,6 +38,7 @@
           <button type="submit" class="btn btn-danger">Delete</button>
         </form>
       </div>
+      <% } %>
     </div>
   </div>
   <div class="col-6">

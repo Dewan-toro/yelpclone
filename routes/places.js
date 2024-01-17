@@ -24,15 +24,31 @@ const validatePlace = (req, res, next) => {
   }
 };
 
-router.get("/", wrapAsync(PlaceController.index));
+router
+  .route("/")
+  .get(wrapAsync(PlaceController.index))
+  .post(isAuth, validatePlace, wrapAsync(PlaceController.store));
 
 router.get("/create", isAuth, (req, res) => {
   res.render("places/create");
 });
 
-router.post("/", isAuth, validatePlace, wrapAsync(PlaceController.store));
-
-router.get("/:id", isValidObjectID("/places"), wrapAsync(PlaceController.show));
+router
+  .route("/:id")
+  .get(isValidObjectID("/places"), wrapAsync(PlaceController.show))
+  .put(
+    isAuth,
+    isAuthorPlace,
+    isValidObjectID("/places"),
+    validatePlace,
+    wrapAsync(PlaceController.update)
+  )
+  .delete(
+    isAuth,
+    isAuthorPlace,
+    isValidObjectID("/places"),
+    wrapAsync(PlaceController.destroy)
+  );
 
 router.get(
   "/:id/edit",
@@ -40,23 +56,6 @@ router.get(
   isAuthorPlace,
   isValidObjectID("/places"),
   wrapAsync(PlaceController.edit)
-);
-
-router.put(
-  "/:id",
-  isAuth,
-  isAuthorPlace,
-  isValidObjectID("/places"),
-  validatePlace,
-  wrapAsync(PlaceController.update)
-);
-
-router.delete(
-  "/:id",
-  isAuth,
-  isAuthorPlace,
-  isValidObjectID("/places"),
-  wrapAsync(PlaceController.destroy)
 );
 
 module.exports = router;

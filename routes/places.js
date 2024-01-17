@@ -53,7 +53,12 @@ router.get(
   isValidObjectID("/places"),
   wrapAsync(async (req, res) => {
     const place = await Place.findById(req.params.id)
-      .populate("reviews")
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "author",
+        },
+      })
       .populate("author");
     res.render("places/show", { place });
   })

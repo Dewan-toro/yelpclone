@@ -12,6 +12,7 @@ const { reviewSchema } = require("../schemas/review");
 //middleware
 const isValidObjectID = require("../middlewares/isValidObjectID");
 const isAuth = require("../middlewares/isAuth");
+const { isAuthorReview } = require("../middlewares/isAuthor");
 
 const router = express.Router({ mergeParams: true });
 
@@ -46,6 +47,7 @@ router.post(
 router.delete(
   "/:review_id",
   isAuth,
+  isAuthorReview,
   isValidObjectID("/places"),
   wrapAsync(async (req, res) => {
     const { place_id, review_id } = req.params;

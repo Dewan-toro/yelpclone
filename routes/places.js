@@ -15,7 +15,12 @@ const router = express.Router();
 router
   .route("/")
   .get(wrapAsync(PlaceController.index))
-  .post(isAuth, upload.array("image", 5), validatePlace, wrapAsync(PlaceController.store));
+  .post(
+    isAuth,
+    upload.array("image", 5),
+    validatePlace,
+    wrapAsync(PlaceController.store)
+  );
 
 router.get("/create", isAuth, (req, res) => {
   res.render("places/create");
@@ -26,6 +31,7 @@ router
   .get(isValidObjectID("/places"), wrapAsync(PlaceController.show))
   .put(
     isAuth,
+    upload.array("image", 5),
     isAuthorPlace,
     isValidObjectID("/places"),
     validatePlace,

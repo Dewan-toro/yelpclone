@@ -6,6 +6,7 @@
     method="POST"
     class="validated-form"
     novalidate
+    enctype="multipart/form-data"
   >
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
@@ -61,14 +62,14 @@
       <div class="invalid-feedback">Please fill out field!</div>
     </div>
     <div class="mb-3">
-      <label for="image" class="form-label">Image Url</label>
+      <label for="image" class="form-label">Image</label>
       <input
-        type="text"
-        name="place[image]"
+        type="file"
+        name="image"
         id="image"
+        accept="image/*"
         class="form-control"
-        value="<%= place.image %>"
-        required
+        multiple
       />
       <div class="valid-feedback">Looks good!</div>
       <div class="invalid-feedback">Please fill out field!</div>
@@ -76,4 +77,3 @@
     <button type="submit" class="btn btn-success">Save</button>
   </form>
 </div>
-

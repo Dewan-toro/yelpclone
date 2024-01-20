@@ -52,4 +52,12 @@ router.get(
   wrapAsync(PlaceController.edit)
 );
 
+router.delete(
+  "/:id/images",
+  isAuth,
+  isAuthorPlace,
+  isValidObjectID("/places"),
+  wrapAsync(PlaceController.destroyImage)
+);
+
 module.exports = router;

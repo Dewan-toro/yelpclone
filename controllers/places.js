@@ -44,7 +44,7 @@ module.exports.update = async (req, res) => {
 
   if (req.files && req.files.length > 0) {
     place.images.forEach((image) => {
-      fs.unlinkSync(image.url, (err) => {
+      fs.unlink(image.url, (err) => {
         new ExpressError(err);
       });
     });
@@ -63,7 +63,17 @@ module.exports.update = async (req, res) => {
 };
 
 module.exports.destroy = async (req, res) => {
-  await Place.findByIdAndDelete(req.params.id);
+  const { id } = req.params;
+  const place = await Place.findById(id);
+
+  if (place.images.length > 0) {
+    place.images.forEach((image) => {
+      fs.unlink(image.url, (err) => new ExpressError(err));
+    });
+  }
+
+  await place.deleteOne();
+
   req.flash("success_msg", "Place deleted successfully");
   res.redirect("/places");
 };

@@ -177,8 +177,15 @@ async function seedPlaces() {
 
   try {
     const newPlace = places.map((place) => {
-      return {...place, author: "65a29e8fbec29d0ad13c957d"};
-    })
+      return {
+        ...place,
+        author: "65a29e8fbec29d0ad13c957d",
+        images: {
+          url: "public\\images\\image-1705761381704-632623501.png",
+          filename: "image-1705761381704-632623501.png",
+        },
+      };
+    });
     await Place.deleteMany({});
     await Place.insertMany(newPlace);
     console.log("Data berhasil disimpan");

@@ -5,11 +5,15 @@
 <div class="card mb-3">
   <div class="row">
     <div class="col-md-4">
+      <% if(place.images.length > 0) { %>
       <img
         src="/images/<%= place.images[0].filename %>"
         alt="<%= place.title %>"
         class="img-fluid"
       />
+      <% } else { %>
+      <img src="https://source.unsplash.com/collection/2349781/1280x720" alt="<%= place.title %>" class="img-fluid" />
+      <% } %>
     </div>
     <div class="col-md-8">
       <div class="card-body">

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Place = require("../models/place");
+const hereMaps = require("../utils/hereMaps");
 
 mongoose
   .connect("mongodb://127.0.0.1/bestpoints")
@@ -22,7 +23,7 @@ async function seedPlaces() {
     },
     {
       title: "Pantai Kuta",
-      price: 0,
+      price: 3332220,
       description:
         "Pantai yang terkenal di Bali dengan pemandangan sunset yang indah",
       location: "Pantai Kuta, Kuta, Badung Regency, Bali",
@@ -30,7 +31,7 @@ async function seedPlaces() {
     },
     {
       title: "Borobudur",
-      price: 0,
+      price: 3344440,
       description:
         "Candi Buddha terbesar di dunia yang terletak di Magelang, Jawa Tengah",
       location: "Borobudur, Magelang, Central Java",
@@ -38,7 +39,7 @@ async function seedPlaces() {
     },
     {
       title: "Kawah Putih",
-      price: 0,
+      price: 113330,
       description:
         "Kawah vulkanik dengan danau berwarna putih di Bandung, Jawa Barat",
       location: "Kawah Putih, Ciwidey, West Java",
@@ -46,7 +47,7 @@ async function seedPlaces() {
     },
     {
       title: "Malioboro",
-      price: 0,
+      price: 3232320,
       description:
         "Jalan utama di Yogyakarta dengan berbagai toko dan kuliner khas",
       location: "Jl. Malioboro, Yogyakarta City, Special Region of Yogyakarta",
@@ -62,7 +63,7 @@ async function seedPlaces() {
     },
     {
       title: "Bukit Bintang",
-      price: 0,
+      price: 4422230,
       description: "Kawasan perbelanjaan dan hiburan di Kuala Lumpur, Malaysia",
       location:
         "Bukit Bintang, Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
@@ -78,7 +79,7 @@ async function seedPlaces() {
     },
     {
       title: "Danau Toba",
-      price: 0,
+      price: 11330,
       description:
         "Danau vulkanik terbesar di Indonesia yang terletak di Sumatera Utara",
       location: "Danau Toba, North Sumatra",
@@ -94,7 +95,7 @@ async function seedPlaces() {
     },
     {
       title: "Pantai Sanur",
-      price: 0,
+      price: 333220,
       description:
         "Pantai di Bali yang cocok untuk berenang dan melihat matahari terbit",
       location: "Pantai Sanur, Denpasar, Bali",
@@ -127,7 +128,7 @@ async function seedPlaces() {
     },
     {
       title: "Bukit Tinggi",
-      price: 0,
+      price: 2220,
       description:
         "Kota kecil yang terletak di Sumatera Barat dengan arsitektur khas Eropa",
       location: "Bukit Tinggi, West Sumatra",
@@ -135,31 +136,15 @@ async function seedPlaces() {
     },
     {
       title: "Pulau Weh",
-      price: 0,
+      price: 1110,
       description:
         "Pulau yang terletak di ujung barat Indonesia dengan keindahan bawah laut yang luar biasa",
       location: "Pulau Weh, Sabang, Aceh",
       image: "https://source.unsplash.com/collection/2349781/1280x720",
     },
     {
-      title: "Taman Safari Indonesia",
-      price: 0,
-      description:
-        "Taman hiburan keluarga dengan berbagai satwa liar di Cisarua, Bogor",
-      location: "Taman Safari Indonesia, Cisarua, West Java",
-      image: "https://source.unsplash.com/collection/2349781/1280x720",
-    },
-    {
-      title: "Gunung Merbabu",
-      price: 50000,
-      description:
-        "Gunung yang terletak di Jawa Tengah dengan pemandangan matahari terbit yang indah",
-      location: "Gunung Merbabu, Central Java",
-      image: "https://source.unsplash.com/collection/2349781/1280x720",
-    },
-    {
       title: "Pulau Lombok",
-      price: 0,
+      price: 555550,
       description:
         "Pulau di Indonesia yang terkenal dengan keindahan pantainya",
       location: "Pulau Lombok, West Nusa Tenggara",
@@ -176,16 +161,27 @@ async function seedPlaces() {
   ];
 
   try {
-    const newPlace = places.map((place) => {
-      return {
-        ...place,
-        author: "65a29e8fbec29d0ad13c957d",
-        images: {
-          url: "public\\images\\image-1705761381704-632623501.png",
-          filename: "image-1705761381704-632623501.png",
-        },
-      };
-    });
+    const newPlace = await Promise.all(
+      places.map(async (place) => {
+        let geoData = await hereMaps.geometry(place.location);
+        if (!geoData) {
+          geoData = {
+            type: "Point",
+            coordinates: [116.32883, -8.90952],
+          };
+        }
+
+        return {
+          ...place,
+          author: "65a29e8fbec29d0ad13c957d",
+          images: {
+            url: "public\\images\\image-1705761381704-632623501.png",
+            filename: "image-1705761381704-632623501.png",
+          },
+          geometry: { ...geoData },
+        };
+      })
+    );
     await Place.deleteMany({});
     await Place.insertMany(newPlace);
     console.log("Data berhasil disimpan");
